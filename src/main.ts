@@ -3,10 +3,15 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
+import components from "@/components/UI/export";
 
 loadFonts();
 
 const app = createApp(App);
+
+components.forEach((component) => {
+  app.component(component.name, component.component);
+});
 
 app.use(createPinia());
 app.use(vuetify);

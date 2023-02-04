@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref, defineAsyncComponent } from "vue";
+import { ref, toRefs, defineAsyncComponent } from "vue";
+import { useCurrencyStore } from "@/stores/currency";
 import TheHeader from "@/components/TheHeader.vue";
 import TheFooter from "@/components/TheFooter.vue";
+
+const { isLoadingCurrencies } = toRefs(useCurrencyStore());
 
 const activeTab = ref<string | null>(null);
 const tabs = [
@@ -28,7 +31,13 @@ const tabs = [
 
     <v-main>
       <v-container>
-        <v-row class="mt-10">
+        <Teleport to="body">
+          <ui-loader :is-loading="isLoadingCurrencies">
+            Загрузка списка валют
+          </ui-loader>
+        </Teleport>
+
+        <v-row v-if="!isLoadingCurrencies" class="mt-10">
           <v-col clos="3">
             <v-tabs v-model="activeTab" direction="vertical" grow>
               <v-tab
