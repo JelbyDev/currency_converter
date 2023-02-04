@@ -1,24 +1,26 @@
 <script setup lang="ts">
 import { ref, toRefs, computed } from "vue";
 import { useCurrencyStore } from "@/stores/currency";
+import type { CurrencyItem } from "@/types";
 
-const { currenciesTickers } = toRefs(useCurrencyStore());
-const { convertedPriceToRUB, formattedPrice } = useCurrencyStore();
+const { currencies } = toRefs(useCurrencyStore());
+const { convertAnyCurrency } = useCurrencyStore();
 
-const fromCurrencyTicker = ref<string>(currenciesTickers.value[0]);
+const fromCurrencyTicker = ref<CurrencyItem>(currencies.value[0]);
+const toCurrencyTicker = ref<CurrencyItem>(currencies.value[0]);
+
 const fromCurrencyValue = ref<number>(1);
-
-const toCurrencyTicker = ref<string>(currenciesTickers.value[0]);
-const toCurrencyValue = computed(() => {
+const toCurrencyValue = computed<number>(() => {
   if (!fromCurrencyTicker.value || !toCurrencyTicker.value) return 0;
 
-  return formattedPrice(
-    convertedPriceToRUB(toCurrencyTicker.value, fromCurrencyValue.value) /
-      convertedPriceToRUB(fromCurrencyTicker.value)
+  return convertAnyCurrency(
+    toCurrencyTicker.value,
+    fromCurrencyTicker.value,
+    fromCurrencyValue.value
   );
 });
 
-function onSwapCurrencyTickers() {
+function toggleReverseCurrencyExchange(): void {
   [fromCurrencyTicker.value, toCurrencyTicker.value] = [
     toCurrencyTicker.value,
     fromCurrencyTicker.value,
@@ -34,9 +36,12 @@ function onSwapCurrencyTickers() {
         <v-select
           v-model="fromCurrencyTicker"
           label="У меня есть:"
-          :items="currenciesTickers"
+          :items="currencies"
+          item-title="CharCode"
+          :item-value="(item) => item"
           variant="underlined"
-        ></v-select>
+        >
+        </v-select>
 
         <v-text-field
           v-model="fromCurrencyValue"
@@ -46,16 +51,21 @@ function onSwapCurrencyTickers() {
       </v-col>
 
       <v-col cols="2" class="text-center">
-        <ui-swapping-btn @click="onSwapCurrencyTickers"></ui-swapping-btn>
+        <ui-reversing-btn
+          @click="toggleReverseCurrencyExchange"
+        ></ui-reversing-btn>
       </v-col>
 
       <v-col cols="5">
         <v-select
           v-model="toCurrencyTicker"
           label="Получу взамен:"
-          :items="currenciesTickers"
+          :items="currencies"
+          item-title="CharCode"
+          :item-value="(item) => item"
           variant="underlined"
-        ></v-select>
+        >
+        </v-select>
 
         <v-text-field
           v-model="toCurrencyValue"
