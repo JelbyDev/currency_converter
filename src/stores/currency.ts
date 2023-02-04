@@ -3,9 +3,6 @@ import { defineStore } from "pinia";
 import { getCurrencies } from "@/api/Currency";
 import type { CurrencyItem } from "@/types";
 
-// Вынести toFixed в конфиг
-// Вынести путь до JSON в конфиг
-
 export const useCurrencyStore = defineStore("currency", () => {
   const MAIN_CURRENCY = {
     Name: "Российский рубль",

@@ -21,7 +21,7 @@ function isReversedCurrencyExchange(ticker: string): boolean {
 
 <template>
   <div>
-    <ui-page-title>Список валют валют</ui-page-title>
+    <ui-page-title>Список валют</ui-page-title>
     <div>
       <v-text-field
         v-model="searchQuery"
