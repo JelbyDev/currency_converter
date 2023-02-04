@@ -5,17 +5,17 @@ import CurrencyListItem from "@/components/CurrencyListItem.vue";
 
 const { searchQuery, foundCurrencies } = toRefs(useCurrencyStore());
 
-const reversedCurrencyExchangeTickers = ref(new Map());
-function toggleReverseCurrencyExchange(ticker: string) {
-  if (isReversedCurrencyExchange(ticker)) {
-    reversedCurrencyExchangeTickers.value.delete(ticker);
+const reversedCurrencyExchangeCharCodes = ref(new Map());
+function toggleReverseCurrencyExchange(charCode: string) {
+  if (isReversedCurrencyExchange(charCode)) {
+    reversedCurrencyExchangeCharCodes.value.delete(charCode);
   } else {
-    reversedCurrencyExchangeTickers.value.set(ticker, 1);
+    reversedCurrencyExchangeCharCodes.value.set(charCode, 1);
   }
 }
 
-function isReversedCurrencyExchange(ticker: string): boolean {
-  return reversedCurrencyExchangeTickers.value.has(ticker);
+function isReversedCurrencyExchange(charCode: string): boolean {
+  return reversedCurrencyExchangeCharCodes.value.has(charCode);
 }
 </script>
 

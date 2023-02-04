@@ -45,7 +45,7 @@ export const useCurrencyStore = defineStore("currency", () => {
     quantity = 1
   ): number {
     if (currency.CharCode === MAIN_CURRENCY.CharCode) return quantity;
-    return formattedValue(1 / currency.Value) * quantity;
+    return formatValue((1 / currency.Value) * quantity);
   }
 
   function convertAnyCurrency(
@@ -55,10 +55,10 @@ export const useCurrencyStore = defineStore("currency", () => {
   ): number {
     if (toCurrency.CharCode === fromCurrency.CharCode) return quantity;
 
-    return formattedValue(fromCurrency.Value / toCurrency.Value) * quantity;
+    return formatValue((fromCurrency.Value / toCurrency.Value) * quantity);
   }
 
-  function formattedValue(price: number): number {
+  function formatValue(price: number): number {
     const formattedValue =
       price % 1
         ? price.toFixed(NUMBER_DIGITS_WHEN_FORMATTED)
@@ -78,6 +78,6 @@ export const useCurrencyStore = defineStore("currency", () => {
     foundCurrencies,
     convertAnyCurrency,
     convertFromMainCurrency,
-    formattedValue,
+    formatValue,
   };
 });

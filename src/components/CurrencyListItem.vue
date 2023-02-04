@@ -3,7 +3,7 @@ import { toRefs, computed } from "vue";
 import { useCurrencyStore } from "@/stores/currency";
 import type { CurrencyItem } from "@/types";
 
-const { MAIN_CURRENCY, convertFromMainCurrency, formattedValue } =
+const { MAIN_CURRENCY, convertFromMainCurrency, formatValue } =
   useCurrencyStore();
 
 const props = defineProps<{
@@ -32,7 +32,7 @@ const toCurrencyValue = computed<number>(() => {
 
 const amountChangedValue = computed<number>(() => {
   const difference = currency.value.Value - currency.value.Previous;
-  return formattedValue(isReversed.value ? -difference : difference);
+  return formatValue(isReversed.value ? -difference : difference);
 });
 
 const amountChangedValueIcon = computed<string>(() => {
