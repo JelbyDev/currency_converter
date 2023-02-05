@@ -1,31 +1,17 @@
 <script setup lang="ts">
-import { ref, toRefs, computed } from "vue";
+import { toRefs } from "vue";
 import { useCurrencyStore } from "@/stores/currency";
-import type { CurrencyItem } from "@/types";
 
 const { currencies } = toRefs(useCurrencyStore());
-const { convertAnyCurrency } = useCurrencyStore();
+const { initConverterCurrency } = useCurrencyStore();
 
-const fromCurrencyTicker = ref<CurrencyItem>(currencies.value[0]);
-const toCurrencyTicker = ref<CurrencyItem>(currencies.value[0]);
-
-const fromCurrencyValue = ref<number>(1);
-const toCurrencyValue = computed<number>(() => {
-  if (!fromCurrencyTicker.value || !toCurrencyTicker.value) return 0;
-
-  return convertAnyCurrency(
-    toCurrencyTicker.value,
-    fromCurrencyTicker.value,
-    fromCurrencyValue.value
-  );
-});
-
-function toggleReverseCurrencyExchange(): void {
-  [fromCurrencyTicker.value, toCurrencyTicker.value] = [
-    toCurrencyTicker.value,
-    fromCurrencyTicker.value,
-  ];
-}
+const {
+  fromCurrency,
+  toCurrency,
+  fromCurrencyValue,
+  toCurrencyValue,
+  toggleReverseCurrencyExchange,
+} = toRefs(initConverterCurrency(currencies.value[0], currencies.value[0]));
 </script>
 
 <template>
@@ -34,7 +20,7 @@ function toggleReverseCurrencyExchange(): void {
     <v-row class="align-center">
       <v-col cols="5">
         <v-select
-          v-model="fromCurrencyTicker"
+          v-model="fromCurrency"
           label="У меня есть:"
           :items="currencies"
           item-title="CharCode"
@@ -58,7 +44,7 @@ function toggleReverseCurrencyExchange(): void {
 
       <v-col cols="5">
         <v-select
-          v-model="toCurrencyTicker"
+          v-model="toCurrency"
           label="Получу взамен:"
           :items="currencies"
           item-title="CharCode"

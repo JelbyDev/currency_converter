@@ -1,22 +1,9 @@
 <script setup lang="ts">
-import { ref, toRefs } from "vue";
+import { toRefs } from "vue";
 import { useCurrencyStore } from "@/stores/currency";
 import CurrencyListItem from "@/components/CurrencyListItem.vue";
 
 const { searchQuery, foundCurrencies } = toRefs(useCurrencyStore());
-
-const reversedCurrencyExchangeCharCodes = ref(new Map());
-function toggleReverseCurrencyExchange(charCode: string) {
-  if (isReversedCurrencyExchange(charCode)) {
-    reversedCurrencyExchangeCharCodes.value.delete(charCode);
-  } else {
-    reversedCurrencyExchangeCharCodes.value.set(charCode, 1);
-  }
-}
-
-function isReversedCurrencyExchange(charCode: string): boolean {
-  return reversedCurrencyExchangeCharCodes.value.has(charCode);
-}
 </script>
 
 <template>
@@ -41,8 +28,6 @@ function isReversedCurrencyExchange(charCode: string): boolean {
             :key="currency.CharCode"
             class="w-100"
             :currency="currency"
-            :is-reversed="isReversedCurrencyExchange(currency.CharCode)"
-            @reverse="toggleReverseCurrencyExchange"
           ></CurrencyListItem>
         </div>
       </div>

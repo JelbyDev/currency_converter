@@ -3,37 +3,21 @@ import { toRefs, computed } from "vue";
 import { useCurrencyStore } from "@/stores/currency";
 import type { CurrencyItem } from "@/types";
 
-const { MAIN_CURRENCY, convertFromMainCurrency, formatValue } =
-  useCurrencyStore();
+const { MAIN_CURRENCY, initConverterCurrency } = useCurrencyStore();
 
 const props = defineProps<{
   currency: CurrencyItem;
-  isReversed: boolean;
 }>();
-const { currency, isReversed } = toRefs(props);
+const { currency } = toRefs(props);
 
-const emits = defineEmits<{
-  (e: "reverse", charCode: string): void;
-}>();
-
-const fromCurrencyTitle = computed<string>(() => {
-  return isReversed.value ? MAIN_CURRENCY.CharCode : currency.value.CharCode;
-});
-
-const toCurrencyTitle = computed<string>(() => {
-  return isReversed.value ? currency.value.CharCode : MAIN_CURRENCY.CharCode;
-});
-
-const toCurrencyValue = computed<number>(() => {
-  return isReversed.value
-    ? convertFromMainCurrency(currency.value)
-    : currency.value.Value;
-});
-
-const amountChangedValue = computed<number>(() => {
-  const difference = currency.value.Value - currency.value.Previous;
-  return formatValue(isReversed.value ? -difference : difference);
-});
+const {
+  fromCurrency,
+  toCurrency,
+  fromCurrencyValue,
+  toCurrencyValue,
+  toggleReverseCurrencyExchange,
+  amountChangedValue,
+} = toRefs(initConverterCurrency(currency.value, MAIN_CURRENCY));
 
 const amountChangedValueIcon = computed<string>(() => {
   return amountChangedValue.value < 0 ? "mdi-arrow-down" : "mdi-arrow-up";
@@ -42,10 +26,6 @@ const amountChangedValueIcon = computed<string>(() => {
 const amountChangedValueColor = computed<string>(() => {
   return amountChangedValue.value < 0 ? "red" : "green";
 });
-
-function onReverse() {
-  emits("reverse", currency.value.CharCode);
-}
 </script>
 
 <template>
@@ -63,25 +43,30 @@ function onReverse() {
       <v-row class="align-center">
         <v-col cols="auto">
           <div class="text-5 mb-1">
-            {{ fromCurrencyTitle }}
+            {{ fromCurrency.CharCode }}
           </div>
-          <div class="text-h6">1</div>
+          <div class="text-h6">
+            {{ fromCurrencyValue }}
+          </div>
         </v-col>
 
         <v-col cols="auto" class="text-center">
-          <ui-reversing-btn size="small" @click="onReverse"></ui-reversing-btn>
+          <ui-reversing-btn
+            size="small"
+            @click="toggleReverseCurrencyExchange"
+          ></ui-reversing-btn>
         </v-col>
 
         <v-col cols="auto">
           <div class="text-5 mb-1">
-            {{ toCurrencyTitle }}
+            {{ toCurrency.CharCode }}
           </div>
           <div class="text-h6">{{ toCurrencyValue }}</div>
         </v-col>
       </v-row>
     </v-col>
 
-    <v-col cols="auto">
+    <v-col cols="auto" v-if="amountChangedValue">
       <v-sheet
         class="amount-changed-value d-flex justify-space-between px-4 py-2"
         :color="amountChangedValueColor"

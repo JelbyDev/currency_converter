@@ -5,8 +5,12 @@ import type { CurrencyItem } from "@/types";
 
 export const useCurrencyStore = defineStore("currency", () => {
   const MAIN_CURRENCY = {
-    Name: "Российский рубль",
     CharCode: "RUB",
+    ID: "CUSTOM",
+    Name: "Российский рубль",
+    Nominal: 1,
+    NumCode: "643",
+    Previous: 1,
     Value: 1,
   };
   const NUMBER_DIGITS_WHEN_FORMATTED = 4;
@@ -40,15 +44,49 @@ export const useCurrencyStore = defineStore("currency", () => {
     }
   }
 
-  function convertFromMainCurrency(
-    currency: CurrencyItem,
-    quantity = 1
-  ): number {
-    if (currency.CharCode === MAIN_CURRENCY.CharCode) return quantity;
-    return formatValue((1 / currency.Value) * quantity);
+  function initConverterCurrency(
+    fromCurrencyArg: CurrencyItem,
+    toCurrencyArg: CurrencyItem
+  ) {
+    const fromCurrency = ref<CurrencyItem>(fromCurrencyArg);
+    const toCurrency = ref<CurrencyItem>(toCurrencyArg);
+
+    const fromCurrencyValue = ref<number>(1);
+    const toCurrencyValue = computed<number>(() => {
+      if (!fromCurrency.value || !toCurrency.value) return 0;
+
+      return convertCurrency(
+        toCurrency.value,
+        fromCurrency.value,
+        fromCurrencyValue.value
+      );
+    });
+
+    const amountChangedValue = computed<number>(() => {
+      const difference = fromCurrencyArg.Value - fromCurrencyArg.Previous;
+      const isReversed = fromCurrencyArg.CharCode === toCurrency.value.CharCode;
+
+      return formatValue(isReversed ? -difference : difference);
+    });
+
+    function toggleReverseCurrencyExchange(): void {
+      [fromCurrency.value, toCurrency.value] = [
+        toCurrency.value,
+        fromCurrency.value,
+      ];
+    }
+
+    return {
+      fromCurrency,
+      toCurrency,
+      fromCurrencyValue,
+      toCurrencyValue,
+      toggleReverseCurrencyExchange,
+      amountChangedValue,
+    };
   }
 
-  function convertAnyCurrency(
+  function convertCurrency(
     toCurrency: CurrencyItem,
     fromCurrency: CurrencyItem,
     quantity = 1
@@ -73,11 +111,9 @@ export const useCurrencyStore = defineStore("currency", () => {
   return {
     MAIN_CURRENCY,
     isLoadingCurrencies,
-    searchQuery,
     currencies,
+    searchQuery,
     foundCurrencies,
-    convertAnyCurrency,
-    convertFromMainCurrency,
-    formatValue,
+    initConverterCurrency,
   };
 });
