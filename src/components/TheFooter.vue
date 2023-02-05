@@ -26,7 +26,7 @@ const technologyList = ["Vue 3", "Pinia", "Vuetify", "TypeScript"];
         </div>
       </div>
 
-      <div class="text-center mt-3">© 2022</div>
+      <div class="text-center mt-3">© 2023</div>
     </v-container>
   </v-footer>
 </template>
