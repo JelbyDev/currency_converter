@@ -31,10 +31,12 @@ const amountChangedValueColor = computed<string>(() => {
 <template>
   <v-row
     no-gutters
-    class="currency-item align-center justify-space-between px-5 py-3"
+    class="currency-item align-center justify-center justify-sm-space-between rounded-lg px-5 py-3"
   >
     <v-col cols="12">
-      <div class="currency-item__title text-subtitle-1 mb-3 pb-2">
+      <div
+        class="currency-item__title text-center text-sm-left text-subtitle-1 pb-2"
+      >
         {{ currency.Name }} ({{ currency.CharCode }})
       </div>
     </v-col>
@@ -66,9 +68,14 @@ const amountChangedValueColor = computed<string>(() => {
       </v-row>
     </v-col>
 
-    <v-col cols="auto" v-if="amountChangedValue">
+    <v-col
+      v-if="amountChangedValue"
+      cols="12"
+      sm="auto"
+      class="d-flex justify-center justify-sm-start"
+    >
       <v-sheet
-        class="amount-changed-value d-flex justify-space-between px-4 py-2"
+        class="amount-changed-value d-flex justify-space-between px-4 py-2 rounded-lg"
         :color="amountChangedValueColor"
       >
         {{ amountChangedValue }}
@@ -81,13 +88,12 @@ const amountChangedValueColor = computed<string>(() => {
 <style scoped>
 .currency-item {
   border: 1px solid #ccc;
-  border-radius: 0.8rem;
+  gap: 0.8rem;
 }
 .currency-item__title {
   border-bottom: 1px solid #ccc;
 }
 .amount-changed-value {
   width: 9rem;
-  border-radius: 0.5rem;
 }
 </style>

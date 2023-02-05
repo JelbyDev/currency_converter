@@ -16,9 +16,9 @@ const {
 
 <template>
   <div>
-    <ui-page-title>Конвертер валют</ui-page-title>
+    <ui-page-title>Конвертер</ui-page-title>
     <v-row class="align-center">
-      <v-col cols="5">
+      <v-col cols="12" sm="5">
         <v-select
           v-model="fromCurrency"
           label="У меня есть:"
@@ -36,13 +36,13 @@ const {
         ></v-text-field>
       </v-col>
 
-      <v-col cols="2" class="text-center">
+      <v-col cols="12" sm="2" class="text-center">
         <ui-reversing-btn
           @click="toggleReverseCurrencyExchange"
         ></ui-reversing-btn>
       </v-col>
 
-      <v-col cols="5">
+      <v-col cols="12" sm="5">
         <v-select
           v-model="toCurrency"
           label="Получу взамен:"

@@ -13,5 +13,6 @@ import CurrencyTabs from "@/components/CurrencyTabs.vue";
 
 .v-container {
   max-width: 1280px;
+  min-width: 320px;
 }
 </style>
